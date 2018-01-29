@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	p := createPipeline("large.in", 800000000, 4)
+	p := createNetworkPipeline("large.in", 800000000, 4)
 	writeToFile(p, "large.out")
 	printFile("large.out")
 }
@@ -43,23 +43,6 @@ func writeToFile(in <-chan int, fileName string) {
 	defer writer.Flush()
 
 	pipeline.WriterSink(writer, in)
-}
-
-func createPipeline(fileName string, fileSize, chunkCount int) <-chan int {
-	chunkSize := fileSize / chunkCount
-	sortResults := []<-chan int{}
-	pipeline.Init()
-	for i := 0; i < chunkCount; i++ {
-		file, err := os.Open(fileName)
-		if err != nil {
-			panic(err)
-		}
-		file.Seek(int64(i*chunkSize), 0)
-		source := pipeline.ReaderSource(bufio.NewReader(file), chunkSize)
-		sortResults = append(sortResults, pipeline.InMemorySort(source))
-	}
-
-	return pipeline.MergeN(sortResults...)
 }
 
 func createNetworkPipeline(fileName string, fileSize, chunkCount int) <-chan int {

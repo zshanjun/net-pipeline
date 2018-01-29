@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"zshanjun/test/pipeline"
+	"zshanjun/net-pipeline/pipeline"
 )
 
 func main() {

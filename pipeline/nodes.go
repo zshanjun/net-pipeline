@@ -15,6 +15,7 @@ func Init() {
 	startTime = time.Now()
 }
 
+//数组来源
 func ArraySource(num ...int) <-chan int {
 	var out = make(chan int)
 	go func() {
@@ -26,6 +27,7 @@ func ArraySource(num ...int) <-chan int {
 	return out
 }
 
+//内存中排序
 func InMemorySort(in <-chan int) <-chan int {
 	out := make(chan int, 1024)
 	go func() {
@@ -50,6 +52,7 @@ func InMemorySort(in <-chan int) <-chan int {
 	return out
 }
 
+//合并
 func Merge(in1, in2 <-chan int) <-chan int {
 	out := make(chan int, 1024)
 	go func() {
@@ -70,6 +73,7 @@ func Merge(in1, in2 <-chan int) <-chan int {
 	return out
 }
 
+//实现了reader接口的来源
 func ReaderSource(reader io.Reader, chunkSize int) <-chan int {
 	out := make(chan int, 1024)
 	go func() {
@@ -92,6 +96,7 @@ func ReaderSource(reader io.Reader, chunkSize int) <-chan int {
 	return out
 }
 
+//写入
 func WriterSink(writer io.Writer, in <-chan int) {
 	for v := range in {
 		//64位系统，int为8个字节
@@ -101,6 +106,7 @@ func WriterSink(writer io.Writer, in <-chan int) {
 	}
 }
 
+//随机源（产生排序的原始数据）
 func RandomSource(count int) <-chan int {
 	out := make(chan int)
 	go func() {
@@ -112,6 +118,7 @@ func RandomSource(count int) <-chan int {
 	return out
 }
 
+//多路合并
 func MergeN(inputs ...<-chan int) <-chan int {
 	if len(inputs) == 1 {
 		return inputs[0]
